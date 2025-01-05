@@ -3,6 +3,7 @@ from uuid import uuid4
 # from cachetools import Cache
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from orchestration import category as category_orchestration
 from orchestration import user as user_orchestration
 from utils.log import logging
 from utils.utils import naive_utcnow
@@ -52,7 +53,15 @@ logging.info("Starting server!")
 
 @app.get("/")
 async def root():
-    return {"status": "online"}
+    # return {"status": "online"}
+    return None
+
+
+@app.post("/is_user_name_available")
+async def is_user_name_available(info: Request):
+    req_info = await info.json()
+    user_name = req_info["user_name"]
+    return await user_orchestration.is_user_name_available(user_name)
 
 
 @app.post("/register")
@@ -68,23 +77,59 @@ async def register(info: Request):
         joined_at=naive_utcnow(),
         last_login=naive_utcnow(),
     )
-    user_json = await user_orchestration.upsert_user(user_view)
-    return user_json
+    return await user_orchestration.upsert_user(user_view)
 
 
-@app.get("/login")
-async def login():
-    return {"status": "online"}
+@app.post("/login")
+async def login(info: Request):
+    req_info = await info.json()
+    email = req_info["email"]
+    password = req_info["password"]
+    return await user_orchestration.login(email, password)
 
 
-@app.get("/category/like")
-async def category_like():
-    return {"status": "online"}
+@app.get("/category-group/list")
+async def category_group_list():
+    return category_orchestration.list_all_category_groups()
 
 
-@app.get("/category/like/all")
-async def category_group_like_all():
-    return {"status": "online"}
+@app.post("/category-group/like")
+async def category_group_like(info: Request):
+    req_info = await info.json()
+    user_uuid = req_info["user_uuid"]
+    category_group_uuid = req_info["category_group_uuid"]
+    return await category_orchestration.like_category_group(user_uuid, category_group_uuid)
+
+
+@app.post("/category-group/dislike")
+async def category_group_dislike(info: Request):
+    req_info = await info.json()
+    user_uuid = req_info["user_uuid"]
+    category_group_uuid = req_info["category_group_uuid"]
+    return await category_orchestration.like_category_group(user_uuid, category_group_uuid)
+
+
+@app.get("/category/list")
+async def category_list(info: Request):
+    req_info = await info.json()
+    category_group_uuid = req_info["category_group_uuid"]
+    return await category_orchestration.list_all_categories(category_group_uuid)
+
+
+@app.post("/category/like")
+async def category_like(info: Request):
+    req_info = await info.json()
+    user_uuid = req_info["user_uuid"]
+    category_uuid = req_info["category_uuid"]
+    return await category_orchestration.like_category(user_uuid, category_uuid)
+
+
+@app.post("/category/dislike")
+async def category_dislike(info: Request):
+    req_info = await info.json()
+    user_uuid = req_info["user_uuid"]
+    category_uuid = req_info["category_uuid"]
+    return category_orchestration.dislike_category(user_uuid, category_uuid)
 
 
 # @app.get("/category/site/tag")

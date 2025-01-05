@@ -16,6 +16,7 @@ async def test_insert_category_site_relationship():
         to_uuid=uuid4(),
         relationship="tag",
         status=None,
+        submitted_by=None,
         created_at=naive_utcnow(),
         updated_at=naive_utcnow(),
     )

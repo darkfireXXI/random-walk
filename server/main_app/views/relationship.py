@@ -10,6 +10,7 @@ class CategorySiteRelationshipView:
     to_uuid: UUID
     relationship: str
     status: str | None
+    submitted_by: UUID | None
     created_at: datetime
     updated_at: datetime
 

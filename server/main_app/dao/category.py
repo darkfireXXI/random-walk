@@ -20,6 +20,18 @@ async def get_category_by_name(session, category_name):
     return results.scalars().one_or_none()
 
 
+async def get_categories_by_parent(session, parent_uuid):
+    stmt = select(Category).where(Category.parent_uuid == parent_uuid).order_by(Category.name.asc())
+    results = await session.execute(stmt)
+    return results.scalars().all()
+
+
+async def get_category_uuids_by_parent(session, parent_uuid):
+    stmt = select(Category.uuid).where(Category.parent_uuid == parent_uuid).order_by(Category.name.asc())
+    results = await session.execute(stmt)
+    return results.scalars().all()
+
+
 async def insert_category(session, category_view):
     category = Category(
         uuid=category_view.uuid,

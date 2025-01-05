@@ -39,6 +39,20 @@ async def test_get_user_by_user_name(generate_user):
 
 @pytest.mark.usefixtures("clean_db", autouse=True)
 @pytest.mark.asyncio(loop_scope="session")
+async def test_gget_user_by_email_password(generate_user):
+    inserted_user = await generate_user()
+    async with rw_async_session() as session, session.begin():
+        user1 = await user_dao.get_user_by_email_password(session, inserted_user.email, "wrong_password")
+        user2 = await user_dao.get_user_by_email_password(session, "wrong_email", inserted_user.password)
+        user3 = await user_dao.get_user_by_email_password(session, inserted_user.email, inserted_user.password)
+
+    assert user1 is None
+    assert user2 is None
+    assert inserted_user.uuid == user3.uuid
+
+
+@pytest.mark.usefixtures("clean_db", autouse=True)
+@pytest.mark.asyncio(loop_scope="session")
 async def test_is_user_name_available(generate_user):
     user = await generate_user()
     async with rw_async_session() as session, session.begin():
