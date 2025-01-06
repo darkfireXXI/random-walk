@@ -25,6 +25,7 @@ async def insert_site(session, site_view):
         collections=site_view.collections,
         score=site_view.score,
         thumbnail=site_view.thumbnail,
+        submitted_by=site_view.submitted_by,
         created_at=site_view.created_at,
         updated_at=site_view.updated_at,
     )

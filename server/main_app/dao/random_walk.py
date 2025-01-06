@@ -2,7 +2,7 @@ from dao import user_category_relationship as user_category_dao
 from dao import user_site_relationship as user_site_dao
 from db.models.main import Site
 from db.models.relationship import CategorySiteRelationship
-from sqlalchemy import or_, select
+from sqlalchemy import and_, or_, select
 
 
 async def random_walk_up(session, user_uuid, limit=10):
@@ -16,7 +16,8 @@ async def random_walk_up(session, user_uuid, limit=10):
             .where(
                 CategorySiteRelationship.from_uuid.in_(user_liked_categories),
                 Site.uuid.notin_(user_visited_sites),
-                or_(Site.status != "broken", Site.status.is_(None)),
+                or_(and_(Site.status != "broken", Site.status != "suggested"), Site.status.is_(None)),
+                or_(CategorySiteRelationship.status != "suggested", CategorySiteRelationship.status.is_(None)),
             )
         )
         .distinct()
@@ -39,7 +40,8 @@ async def random_walk_down(session, user_uuid, limit=10):
             .where(
                 CategorySiteRelationship.from_uuid.in_(user_liked_categories),
                 Site.uuid.notin_(user_visited_sites),
-                or_(Site.status != "broken", Site.status.is_(None)),
+                or_(and_(Site.status != "broken", Site.status != "suggested"), Site.status.is_(None)),
+                or_(CategorySiteRelationship.status != "suggested", CategorySiteRelationship.status.is_(None)),
             )
         )
         .distinct()
