@@ -29,7 +29,7 @@ async def test_insert_user():
 
 @pytest.mark.usefixtures("clean_db", autouse=True)
 @pytest.mark.asyncio(loop_scope="session")
-async def test_upsert_user():
+async def test_update_user():
     user_view = UserView(
         uuid=uuid4(),
         user_name="drip___drop",
@@ -48,8 +48,8 @@ async def test_upsert_user():
     user_view.photo = "photo.url"
     user_view.role = "moderator"
     async with rw_async_session() as session, session.begin():
-        upserted_user = await user_api.upsert_user(session, user_view)
-        user = await user_api.get_user_by_uuid(session, upserted_user.uuid)
+        updated_user = await user_api.upsert_user(session, user_view)
+        user = await user_api.get_user_by_uuid(session, updated_user.uuid)
 
     assert user_view.uuid == user.uuid
     assert user.user_name == "new_name"

@@ -24,6 +24,7 @@ async def test_insert_user_site_relationship():
             session,
             inserted_category_site.from_uuid,
             inserted_category_site.to_uuid,
+            inserted_category_site.relationship,
         )
 
     assert user_site_relationship_view.uuid == user_site_relationship.uuid
@@ -65,6 +66,7 @@ async def test_delete_user_site_relationship(generate_user_site_relationship):
             session,
             user_site_relationship.from_uuid,
             user_site_relationship.to_uuid,
+            user_site_relationship.relationship,
         )
 
     assert user_site_relationship is None

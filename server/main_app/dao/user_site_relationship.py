@@ -2,10 +2,11 @@ from db.models.relationship import UserSiteRelationship
 from sqlalchemy import delete, select
 
 
-async def get_user_site_relationship(session, user_uuid, site_uuid):
+async def get_user_site_relationship(session, user_uuid, site_uuid, relationship):
     stmt = select(UserSiteRelationship).where(
         UserSiteRelationship.from_uuid == user_uuid,
         UserSiteRelationship.to_uuid == site_uuid,
+        UserSiteRelationship.relationship == relationship,
     )
     results = await session.execute(stmt)
     return results.scalars().one_or_none()

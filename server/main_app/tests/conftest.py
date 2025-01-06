@@ -154,6 +154,7 @@ async def _generate_category_site_relationship(
     to_uuid=None,
     relationship="tag",
     status=None,
+    submitted_by=None,
     created_at=None,
     updated_at=None,
 ):
@@ -163,6 +164,7 @@ async def _generate_category_site_relationship(
         to_uuid=to_uuid if to_uuid else uuid4(),
         relationship=relationship,
         status=status,
+        submitted_by=submitted_by,
         created_at=created_at if created_at else naive_utcnow(),
         updated_at=updated_at if updated_at else naive_utcnow(),
     )

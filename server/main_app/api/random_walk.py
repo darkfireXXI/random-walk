@@ -9,5 +9,6 @@ async def random_walk(session, user_uuid):
 
     sites = best_sites + worst_sites
     random.shuffle(sites)
-    # convert from db model to view here
+
+    sites = [site.to_view() for site in sites]
     return sites

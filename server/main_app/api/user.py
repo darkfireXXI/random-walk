@@ -1,4 +1,5 @@
 from dao import user as user_dao
+from utils.utils import naive_utcnow
 
 
 async def get_user_by_uuid(session, user_uuid):
@@ -28,11 +29,16 @@ async def upsert_user(session, user_view):
         user.password = user_view.password
         user.photo = user_view.photo
         user.role = user_view.role
+        user.updated_at = naive_utcnow()
 
     else:
         user = await user_dao.insert_user(session, user_view)
 
     return user.to_view()
+
+
+async def get_user_by_email_password(session, email, password):
+    return await user_dao.get_user_by_email_password(session, email, password)
 
 
 async def delete_user(session, user_uuid):

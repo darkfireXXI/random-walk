@@ -14,6 +14,12 @@ async def get_user_by_user_name(session, user_name):
     return results.scalars().one_or_none()
 
 
+async def get_user_by_email_password(session, email, password):
+    stmt = select(User).where(User.email == email, User.password == password)
+    results = await session.execute(stmt)
+    return results.scalars().one_or_none()
+
+
 async def is_user_name_available(session, user_name):
     stmt = select(User.user_name).where(User.user_name == user_name)
     results = await session.execute(stmt)
