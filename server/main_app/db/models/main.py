@@ -9,7 +9,7 @@ class User(Base):
     __table_args__ = (sqlalchemy.UniqueConstraint("user_name", name="user_name_key"),)
 
     uuid = mapped_column(sqlalchemy.UUID(as_uuid=True), nullable=False, primary_key=True)
-    user_name = mapped_column(sqlalchemy.Text(), nullable=False)
+    user_name = mapped_column(sqlalchemy.Text(), nullable=False, index=True)
     email = mapped_column(sqlalchemy.Text(), nullable=False)
     password = mapped_column(sqlalchemy.Text(), nullable=False)
     # "" != None in postgres/sqlalchemy
@@ -84,7 +84,7 @@ class Category(Base):
     __table_args__ = (sqlalchemy.UniqueConstraint("name", name="category_name_key"),)
 
     uuid = mapped_column(sqlalchemy.UUID(as_uuid=True), nullable=False, primary_key=True)
-    name = mapped_column(sqlalchemy.Text(), nullable=False)
+    name = mapped_column(sqlalchemy.Text(), nullable=False, index=True)
     parent_uuid = mapped_column(sqlalchemy.UUID(as_uuid=True), nullable=False)
     parent_name = mapped_column(sqlalchemy.Text(), nullable=False)
     status = mapped_column(sqlalchemy.Text(), nullable=True)
